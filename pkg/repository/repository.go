@@ -2,9 +2,12 @@ package repository
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/qara-qurt/api-gin/pkg/model"
 )
 
-type Authorization interface{}
+type Authorization interface {
+	CreateUser(user model.User) (int, error)
+}
 
 type TodoList interface{}
 
@@ -17,5 +20,7 @@ type Repository struct {
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		Authorization: NewAuthPostgres(db),
+	}
 }

@@ -1,8 +1,13 @@
 package service
 
-import "github.com/qara-qurt/api-gin/pkg/repository"
+import (
+	"github.com/qara-qurt/api-gin/pkg/model"
+	"github.com/qara-qurt/api-gin/pkg/repository"
+)
 
-type Authorization interface{}
+type Authorization interface {
+	CreateUser(user model.User) (int, error)
+}
 
 type TodoList interface{}
 
@@ -15,5 +20,7 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Authorization: NewAuthService(repos.Authorization),
+	}
 }

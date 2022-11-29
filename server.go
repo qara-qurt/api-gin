@@ -2,9 +2,10 @@ package gin
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
@@ -21,7 +22,7 @@ func (s *Server) Run(port string, handler http.Handler) error {
 		WriteTimeout:   10 * time.Second,
 	}
 
-	log.Printf("start server on %s ...", port)
+	logrus.Infof("start server on %s ...", port)
 
 	return s.httpServer.ListenAndServe()
 }
