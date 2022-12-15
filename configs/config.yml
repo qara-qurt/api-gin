@@ -1,9 +1,9 @@
 port: "8080"
 
 db:
-  username: "postgres"
+  username: "root"
   password: "root"
   host: "localhost"
   port: "5436"
-  dbname: "postgres"
+  dbname: "todo"
   sslmode: "disable"
