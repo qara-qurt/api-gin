@@ -2,6 +2,9 @@ package repository
 
 import (
 	"fmt"
+	"strings"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/qara-qurt/api-gin/pkg/model"
@@ -66,4 +69,52 @@ func (r *TodoListPostgres) GetById(userId, listId int) (model.TodoList, error) {
 	err := r.db.Get(&list, getListByIdQuery, userId, listId)
 	return list, err
 
+}
+
+func (r *TodoListPostgres) Update(userId int, listId int, input model.UpdateListInput) error {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Title != nil {
+		setValues = append(setValues, fmt.Sprintf("title = $%d", argId))
+		args = append(args, *input.Title)
+		argId++
+	}
+	if input.Description != nil {
+		setValues = append(setValues, fmt.Sprintf("description = $%d", argId))
+		args = append(args, *input.Description)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+
+	updateQuery := fmt.Sprintf(`UPDATE %s tl 
+								SET %s FROM %s ul 
+								WHERE tl.id = ul.list_id 
+								AND ul.list_id = $%d 
+								AND ul.user_id = $%d`,
+		todoListTable, setQuery, usersListTable, argId, argId+1)
+
+	args = append(args, listId, userId)
+
+	logrus.Debugf("updateQuery : %s", updateQuery)
+	logrus.Debugf("args : %s", args)
+
+	_, err := r.db.Exec(updateQuery, args...)
+
+	return err
+}
+
+func (r *TodoListPostgres) Delete(userId, listId int) error {
+
+	deleteQuery := fmt.Sprintf(`DELETE FROM %s tl 
+								USING %s ul  
+								WHERE tl.id = ul.list_id 
+								AND ul.user_id = $1 
+								AND ul.list_id = $2`,
+		todoListTable, usersListTable)
+	_, err := r.db.Exec(deleteQuery, userId, listId)
+
+	return err
 }
