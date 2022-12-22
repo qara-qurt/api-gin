@@ -2,7 +2,11 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/qara-qurt/api-gin/docs"
 	"github.com/qara-qurt/api-gin/pkg/service"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -15,7 +19,10 @@ func NewHandler(services *service.Service) *Handler {
 
 // Init routes
 func (h *Handler) InitRoutes() *gin.Engine {
+
 	router := gin.New()
+
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	auth := router.Group("/auth")
 	{

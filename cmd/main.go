@@ -14,10 +14,21 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
-	gin "github.com/qara-qurt/api-gin"
+	mygin "github.com/qara-qurt/api-gin"
 )
 
+// @title Todo App API
+// @version 1.0
+// @description API Server for TodoList Application
+
+// @host localhost:8000
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
+
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
 	if err := InitCinfig(); err != nil {
@@ -46,7 +57,7 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	//HTTP Server
-	srv := new(gin.Server)
+	srv := new(mygin.Server)
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
 			logrus.Fatal(err.Error())
