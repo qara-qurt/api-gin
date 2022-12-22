@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 services:
   app:
     build: ./
@@ -16,6 +16,6 @@ services:
     volumes:
       - ./.database/postgres/data:/var/lib/postgresql/data
     environment:
-      - DB_PASSWORD:root
+      - POSTGRES_PASSWORD=root
     ports:
       - 5436:5432
