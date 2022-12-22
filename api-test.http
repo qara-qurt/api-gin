@@ -1,0 +1,95 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzE3NTcxMDAsImlhdCI6MTY3MTcxMzkwMCwidXNlcl9pZCI6MX0.M6hCekmW6RKZ5WGhuMK56RjCV8ks51yLzzJME1Bou5I
+@baseURL = http://localhost:8080
+
+
+### SIGN-UP
+POST {{baseURL}}/auth/sign-up HTTP/1.1
+Content-Type: application/json
+//Authorization: token xxx
+
+{
+    "name":"Dias",
+    "username":"qara_qurt",
+    "password":"123456"
+}
+
+### SIGN-IN
+POST  {{baseURL}}/auth/sign-in HTTP/1.1
+Content-Type: application/json
+//Authorization: token xxx
+
+{
+    "username":"qara_qurt",
+    "password":"123456"
+}
+
+### CREATE TODO-LIST
+POST {{baseURL}}/api/lists HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title":"test",
+    "description":"test"
+}
+
+### CREATE TODO ITEM
+POST {{baseURL}}/api/lists/2/items
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+{
+    "title":"item3",
+    "description":"item"
+}
+
+
+### GET LISTS
+GET {{baseURL}}/api/lists HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET LIST BY ID
+GET {{baseURL}}/api/lists/2 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### DELETE LIST BY ID
+DELETE {{baseURL}}/api/lists/1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET ITEMS
+GET {{baseURL}}/api/lists/2/items HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### GET ITEM BY ID
+GET {{baseURL}}/api/items/4 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### DELETE ITEM BY ID
+DELETE {{baseURL}}/api/items/9 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### UPDATE ITEM
+PUT {{baseURL}}/api/items/4
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title":"dias",
+    "done":true
+}
+
+### UPDATE LIST
+PUT {{baseURL}}/api/lists/2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title":"updated"
+}

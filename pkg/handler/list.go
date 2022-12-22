@@ -18,7 +18,7 @@ func (h *Handler) createList(c *gin.Context) {
 
 	var input model.TodoList
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -100,7 +100,6 @@ func (h *Handler) updateList(c *gin.Context) {
 	c.JSON(http.StatusOK, statusResponse{
 		Status: "ok",
 	})
-
 }
 
 func (h *Handler) deleteList(c *gin.Context) {

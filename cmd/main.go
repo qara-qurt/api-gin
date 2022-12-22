@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -44,9 +47,28 @@ func main() {
 
 	//HTTP Server
 	srv := new(gin.Server)
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		logrus.Fatal(err.Error())
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+			logrus.Fatal(err.Error())
+		}
+	}()
+
+	logrus.Print("todo app started ...")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	logrus.Print("todo app shutting down")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logrus.Error("error on server shutting down")
 	}
+
+	if err := db.Close(); err != nil {
+		logrus.Error("server shuttng down error on db connection close")
+	}
+
 }
 
 func InitCinfig() error {
